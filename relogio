@@ -1,0 +1,25 @@
+LABEL            INSTR              END                   COMENTÁRIOS
+ 
+                        ORG             0000h                ;Origem no endereço 00h
+ 
+                        MOV             A,#00h               ;Limpa o acumulador 
+                        MOV             TCON,#00h       ;Move 00 para o Timer Control 
+                        MOV             TL0,#00h           ;Define os 8 bits inferiores xxxx 0000
+                        MOV             TH0,#00h           ;define os 8 bits superiores 0000 xxxx 
+                        MOV             TMOD,#00h       ;Habilita Modo 2 do Timer0
+                        MOV             IE,#82h               ;Move o valor  10000010 para o Interrupt Code onde EA:Habilita tudo e ET:Liber Timer
+                        MOV            IP,#00h                ;Move 00h para Interrupt Priority definindo baixa prioridade
+                        MOV             DPTR,#00h       ;Limpa o DPTR movendo 00h
+                        MOV             TCON,#10h       ;Move o valor 10h (10000)para o Timer Control, onde TR:Efeito imer,Liga Timer
+REPETE:         LJMP            REPETE
+ 
+TIMER:              
+                       INC               DPTR                  ;Incrementa o DPTR, DPTR=DPTR+1
+                       MOV             R0,DPL               ;Move o valor de DPL para o registrador R0
+                       MOV             R1,DPH               ;Move o valor de DPH para o registrador R1
+                       CJNE            R0,#10h,FIM      ;Compara o valor do R0 com #10, se diferente       envia para FIM
+                      CJNE            R1,#0Eh,FIM      ;Compara o valor de R1 com #0E, se diferenteenvia para FIM
+                      ADD             A,#01h                 ;Acumulador recebe A+01
+                      MOV             DPTR,#00h        ;Limpa DPTR
+FIM:
+                      RETI
